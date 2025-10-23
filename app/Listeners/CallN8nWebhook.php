@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Actions\GenerateFileUrl;
 use App\Events\LessonAudioUploaded;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,24 +34,46 @@ class CallN8nWebhook implements ShouldQueue
             return;
         }
 
-        // Get the audio file path from the lesson or audioData
-        $audioFilePath = $event->audioData['file_path'] ?? $event->lesson->audio_file_path;
+        // Get the local audio file path and generate external URL
+        $audioFilePath = $event->lesson->audio_file_path;
+        $externalAudioUrl = null;
         
-        if (!$audioFilePath) {
-            Log::warning('No audio file path found for lesson: ' . $event->lesson->id);
+        if ($audioFilePath) {
+            try {
+                $externalAudioUrl = GenerateFileUrl::execute($audioFilePath);
+                
+                if ($externalAudioUrl) {
+                    Log::info('External audio URL generated successfully', [
+                        'lesson_id' => $event->lesson->id,
+                        'file_path' => $audioFilePath,
+                        'external_url' => $externalAudioUrl
+                    ]);
+                } else {
+                    Log::warning('Failed to generate external URL for audio file', [
+                        'lesson_id' => $event->lesson->id,
+                        'file_path' => $audioFilePath
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Exception while generating external URL', [
+                    'lesson_id' => $event->lesson->id,
+                    'file_path' => $audioFilePath,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+        
+        if (!$externalAudioUrl) {
+            Log::warning('No accessible audio URL found for lesson: ' . $event->lesson->id);
             return;
         }
 
-        // Copy audio file to public directory for n8n download
-        $publicAudioUrl = $this->copyAudioToPublic($audioFilePath, $event->lesson->id);
-
         // Get file information
-        $fileSize = null;
-        $fileName = basename($audioFilePath);
+        $fileName = $audioFilePath ? basename($audioFilePath) : 'unknown';
         
-        if (Storage::disk('private')->exists($audioFilePath)) {
-            $fileSize = Storage::disk('private')->size($audioFilePath);
-        }
+        // File size will be handled by the external service
+        // We could potentially get it from the external URL response headers if needed
+        $fileSize = null;
 
         $payload = [
             'lesson' => [
@@ -66,11 +89,10 @@ class CallN8nWebhook implements ShouldQueue
             ],
             'audio_data' => [
                 'file_path' => $audioFilePath,
-                'public_url' => $publicAudioUrl,
+                'external_url' => $externalAudioUrl,
                 'file_name' => $fileName,
                 'file_size' => $fileSize,
-                'duration_minutes' => $event->audioData['duration_minutes'] ?? $event->lesson->duration_minutes,
-                'action' => $event->audioData['action'] ?? 'unknown'
+                'duration_minutes' => $event->lesson->duration_minutes,
             ],
             'event_type' => 'lesson_audio_uploaded',
             'timestamp' => now()->toISOString()
@@ -81,7 +103,7 @@ class CallN8nWebhook implements ShouldQueue
             
             if ($response->successful()) {
                 Log::info('N8N webhook called successfully for lesson: ' . $event->lesson->id, [
-                    'public_url' => $publicAudioUrl
+                    'external_url' => $externalAudioUrl
                 ]);
             } else {
                 Log::error('N8N webhook failed', [
@@ -98,51 +120,5 @@ class CallN8nWebhook implements ShouldQueue
         }
     }
 
-    /**
-     * Copy audio file to public directory for n8n download
-     */
-    private function copyAudioToPublic(string $privatePath, int $lessonId): ?string
-    {
-        try {
-            if (!Storage::disk('private')->exists($privatePath)) {
-                Log::error('Private audio file not found: ' . $privatePath);
-                return null;
-            }
 
-            // Create public directory if it doesn't exist
-            $publicDir = 'audio/lessons';
-            if (!Storage::disk('public')->exists($publicDir)) {
-                Storage::disk('public')->makeDirectory($publicDir);
-            }
-
-            // Generate public filename with lesson ID
-            $extension = pathinfo($privatePath, PATHINFO_EXTENSION);
-            $publicFileName = "lesson_{$lessonId}_" . time() . ".{$extension}";
-            $publicPath = "{$publicDir}/{$publicFileName}";
-
-            // Copy file from private to public storage
-            $fileContent = Storage::disk('private')->get($privatePath);
-            Storage::disk('public')->put($publicPath, $fileContent);
-
-            // Generate public URL
-            $publicUrl = url("storage/{$publicPath}");
-
-            Log::info('Audio file copied to public directory', [
-                'lesson_id' => $lessonId,
-                'private_path' => $privatePath,
-                'public_path' => $publicPath,
-                'public_url' => $publicUrl
-            ]);
-
-            return $publicUrl;
-
-        } catch (\Exception $e) {
-            Log::error('Failed to copy audio file to public directory', [
-                'lesson_id' => $lessonId,
-                'private_path' => $privatePath,
-                'error' => $e->getMessage()
-            ]);
-            return null;
-        }
-    }
 }

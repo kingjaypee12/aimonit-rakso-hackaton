@@ -69,6 +69,11 @@ return [
             'report' => false,
         ],
 
+        'peac_files' => [
+            'driver' => 'peac_files',
+            'root' => 'ors',
+        ],
+
     ],
 
     /*

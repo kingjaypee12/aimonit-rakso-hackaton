@@ -21,10 +21,9 @@ class LessonAudioUploaded
     /**
      * Create a new event instance.
      */
-    public function __construct(Lesson $lesson, array $audioData)
+    public function __construct(Lesson $lesson)
     {
         $this->lesson = $lesson;
-        $this->audioData = $audioData;
     }
 
     /**
