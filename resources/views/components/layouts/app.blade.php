@@ -8,7 +8,7 @@
     </head>
     <body class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
         <!-- ✅ Responsive container -->
-        <div class="w-screen max-w-screen h-screen bg-white shadow-lg overflow-hidden">
+        <div class="w-screen max-w-screen bg-white shadow-lg overflow-hidden">
             {{ $slot ?? '' }}
         </div>
 
