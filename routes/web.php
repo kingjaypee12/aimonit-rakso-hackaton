@@ -9,5 +9,5 @@ Route::get('/', function () {
 
 
 Route::prefix('student')->group(function () {
-    Route::get('quiz/{uid?}', QuestionnairesSheets::class)->name('student.quiz_sheet');
+    Route::get('quiz/{game_pin}', QuestionnairesSheets::class)->name('student.quiz_sheet');
 });
