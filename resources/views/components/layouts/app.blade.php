@@ -10,6 +10,7 @@
         <!-- ✅ Responsive container -->
         <div class="w-screen max-w-screen bg-white shadow-lg overflow-hidden">
             {{ $slot ?? '' }}
+            @yield('content')
         </div>
 
         @livewireScripts

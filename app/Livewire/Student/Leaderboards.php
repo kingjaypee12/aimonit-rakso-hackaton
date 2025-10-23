@@ -16,7 +16,7 @@ class Leaderboards extends Component
     public function mount($game_pin, $participant_id = null)
     {
         $this->game_pin = $game_pin;
-        $this->participant_id = $participant_id;
+        $this->participant_id = decrypt($participant_id);
         $this->lastUpdated = now()->format('g:i:s A');
 
         if ($participant_id) {
