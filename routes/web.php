@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Student\Leaderboards;
 use App\Livewire\Student\QuestionnairesIntroSheets;
 use App\Livewire\Student\QuestionnairesSheets;
 use Illuminate\Support\Facades\Route;
@@ -12,4 +13,5 @@ Route::get('/', function () {
 Route::prefix('quiz')->group(function () {
     Route::get('game/{game_pin}/{participant_id}', QuestionnairesSheets::class)->name('student.quiz_sheet');
     Route::get('participant', QuestionnairesIntroSheets::class)->name('participant');
+    Route::get('leaderboards/{game_pin}/{participant_id}', Leaderboards::class)->name('leaderboards');
 });
