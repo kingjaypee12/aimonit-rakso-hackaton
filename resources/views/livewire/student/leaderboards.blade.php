@@ -1,12 +1,42 @@
-<div class="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 flex flex-col items-center py-6 sm:py-10 px-4">
+<div class="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 flex flex-col items-center py-6 sm:py-10 px-4" wire:poll.3s>
 
-    <!-- 🏆 Title -->
+
     <div class="text-center mb-6 sm:mb-8">
-        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-            <span class="text-4xl sm:text-5xl">🏆</span>
-            <span>Leaderboard</span>
-        </h1>
-        <p class="text-white/80 text-sm sm:text-base">See how you rank against others!</p>
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white flex items-center gap-3">
+                <span class="text-4xl sm:text-5xl">🏆</span>
+                <span>Leaderboard</span>
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+            </h1>
+        </div>
+        <p class="text-white/80 text-sm sm:text-base mb-3">
+            See how you rank against others!
+            <span class="inline-flex items-center gap-1 text-xs">
+                <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </span>
+        </p>
+        <button
+            wire:click="$refresh"
+            class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all active:scale-95 inline-flex items-center gap-2"
+            wire:loading.attr="disabled"
+            wire:loading.class="opacity-50"
+        >
+            <svg wire:loading.remove class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <svg wire:loading class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span wire:loading.remove>Refresh Now</span>
+            <span wire:loading>Refreshing...</span>
+        </button>
     </div>
 
     @php
@@ -14,9 +44,9 @@
         $others = collect($leaderboards)->skip(3);
     @endphp
 
-    <!-- 🥇 Podium Section -->
-    <div class="flex justify-center items-end gap-4 sm:gap-6 mb-8 sm:mb-10">
-        <!-- 2nd Place -->
+
+    <div class="flex justify-center items-end gap-4 sm:gap-6 mb-8 sm:mb-10" wire:loading.class="opacity-75" wire:target="$refresh">
+
         @if(isset($podium[1]))
         <div class="flex flex-col items-center transform hover:scale-105 transition-all">
             <div class="text-2xl sm:text-3xl mb-2">🥈</div>
@@ -34,7 +64,7 @@
         </div>
         @endif
 
-        <!-- 1st Place -->
+
         @if(isset($podium[0]))
         <div class="flex flex-col items-center transform hover:scale-105 transition-all">
             <div class="text-3xl sm:text-4xl mb-2 animate-bounce">🥇</div>
@@ -52,7 +82,7 @@
         </div>
         @endif
 
-        <!-- 3rd Place -->
+
         @if(isset($podium[2]))
         <div class="flex flex-col items-center transform hover:scale-105 transition-all">
             <div class="text-2xl sm:text-3xl mb-2">🥉</div>
@@ -71,13 +101,13 @@
         @endif
     </div>
 
-    <!-- 🧾 Other Participants -->
+
     @if($others->isNotEmpty())
         <div class="w-full max-w-md">
             <h3 class="text-white font-bold text-lg sm:text-xl mb-3 text-center">Other Participants</h3>
-            <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl divide-y divide-gray-100 overflow-hidden">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl divide-y divide-gray-100 overflow-hidden" wire:loading.class="opacity-50 scale-95" wire:target="$refresh">
                 @foreach($others as $index => $player)
-                    <div class="flex justify-between items-center py-3 sm:py-4 px-4 sm:px-5 hover:bg-gray-50 transition {{ $player['is_current_user'] ? 'bg-purple-50 border-l-4 border-purple-600' : '' }}">
+                    <div class="flex justify-between items-center py-3 sm:py-4 px-4 sm:px-5 hover:bg-gray-50 transition-all {{ $player['is_current_user'] ? 'bg-purple-50 border-l-4 border-purple-600' : '' }}">
                         <div class="flex items-center gap-3 sm:gap-4">
                             <span class="font-bold text-gray-500 text-base sm:text-lg w-6 sm:w-8">{{ $index + 1 }}</span>
                             <div>
@@ -97,8 +127,27 @@
         </div>
     @endif
 
-    <!-- Back Button -->
-    <div class="mt-8 sm:mt-10">
+
+    <div class="mt-6 sm:mt-8 bg-white/10 backdrop-blur-sm rounded-xl px-6 py-3 text-white text-center">
+        <div class="flex items-center justify-center gap-4 text-xs sm:text-sm">
+            <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <strong>{{ count($leaderboards) }}</strong> participant{{ count($leaderboards) !== 1 ? 's' : '' }}
+            </span>
+            {{-- <span class="text-white/60">•</span>
+            <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Updated at <strong>{{ $lastUpdated }}</strong>
+            </span> --}}
+        </div>
+    </div>
+
+
+    <div class="mt-6 sm:mt-8">
         <a href="/" class="bg-white text-purple-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-100 transition-all shadow-lg active:scale-95 inline-flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -106,5 +155,20 @@
             <span>Join Another Quiz</span>
         </a>
     </div>
+    <style>
+        [wire\:loading\.class] {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
 
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.95);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+    </style>
 </div>
