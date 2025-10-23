@@ -79,15 +79,15 @@ class StudentOverallStats extends Model
         // Update podium finishes
         if ($participant->rank <= 3) {
             $this->increment('podium_finishes');
-            
+
             if ($participant->rank === 1) {
                 $this->increment('first_place_finishes');
             }
         }
 
         // Recalculate overall accuracy
-        $this->overall_accuracy = $this->total_questions_answered > 0 
-            ? ($this->total_correct_answers / $this->total_questions_answered) * 100 
+        $this->overall_accuracy = $this->total_questions_answered > 0
+            ? ($this->total_correct_answers / $this->total_questions_answered) * 100
             : 0;
 
         // Recalculate average answer time
@@ -105,7 +105,7 @@ class StudentOverallStats extends Model
     protected function recalculateAverageAnswerTime(): void
     {
         $participants = GameParticipant::where('student_id', $this->student_id)->get();
-        
+
         if ($participants->count() > 0) {
             $totalTime = $participants->sum('average_answer_time');
             $this->average_answer_time = $totalTime / $participants->count();
@@ -118,7 +118,7 @@ class StudentOverallStats extends Model
     protected function updateLevel(): void
     {
         $newLevel = 1;
-        
+
         foreach (self::LEVEL_THRESHOLDS as $level => $threshold) {
             if ($this->total_points >= $threshold) {
                 $newLevel = $level;
@@ -136,8 +136,8 @@ class StudentOverallStats extends Model
     public function addBadge(string $badge): void
     {
         $badges = $this->badges_earned ?? [];
-        
-        if (!in_array($badge, $badges)) {
+
+        if (! in_array($badge, $badges)) {
             $badges[] = $badge;
             $this->badges_earned = $badges;
             $this->save();
@@ -158,7 +158,7 @@ class StudentOverallStats extends Model
     public function getPointsToNextLevelAttribute(): int
     {
         $nextLevel = $this->level + 1;
-        
+
         if (isset(self::LEVEL_THRESHOLDS[$nextLevel])) {
             return self::LEVEL_THRESHOLDS[$nextLevel] - $this->total_points;
         }
@@ -179,7 +179,7 @@ class StudentOverallStats extends Model
         }
 
         $progress = (($this->total_points - $currentLevelThreshold) / ($nextLevelThreshold - $currentLevelThreshold)) * 100;
-        
+
         return min(100, max(0, $progress));
     }
 
@@ -213,9 +213,9 @@ class StudentOverallStats extends Model
     public function scopeTopPerformers($query, int $limit = 10)
     {
         return $query->where('overall_accuracy', '>=', 80)
-                    ->where('total_games_played', '>=', 5)
-                    ->orderBy('total_points', 'desc')
-                    ->limit($limit);
+            ->where('total_games_played', '>=', 5)
+            ->orderBy('total_points', 'desc')
+            ->limit($limit);
     }
 
     /**
@@ -224,9 +224,9 @@ class StudentOverallStats extends Model
     public function scopeNeedImprovement($query, int $limit = 10)
     {
         return $query->where('overall_accuracy', '<', 60)
-                    ->where('total_games_played', '>=', 3)
-                    ->orderBy('overall_accuracy', 'asc')
-                    ->limit($limit);
+            ->where('total_games_played', '>=', 3)
+            ->orderBy('overall_accuracy', 'asc')
+            ->limit($limit);
     }
 
     /**

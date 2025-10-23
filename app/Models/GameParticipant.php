@@ -70,7 +70,7 @@ class GameParticipant extends Model
     public function getAccuracyAttribute(): float
     {
         $totalAnswers = $this->correct_answers + $this->incorrect_answers;
-        
+
         if ($totalAnswers === 0) {
             return 0;
         }
@@ -92,7 +92,7 @@ class GameParticipant extends Model
     public function updateScore(int $points, bool $isCorrect, float $answerTime): void
     {
         $this->total_score += $points;
-        
+
         if ($isCorrect) {
             $this->correct_answers++;
             $this->current_streak++;
