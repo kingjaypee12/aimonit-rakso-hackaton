@@ -40,8 +40,7 @@ class CallN8nWebhook
 
         if ($audioFilePath) {
             try {
-                // $externalAudioUrl = Storage::disk('public')->url($audioFilePath);
-                $externalAudioUrl = asset('aud.aac');
+                $externalAudioUrl = Storage::disk('public')->url($audioFilePath);
 
                 if ($externalAudioUrl) {
                     Log::info('External audio URL generated successfully', [
@@ -91,8 +90,7 @@ class CallN8nWebhook
             ],
             'audio_data' => [
                 'file_path' => $audioFilePath,
-                // 'external_url' => $externalAudioUrl,
-                'external_url' => $audioFilePath,
+                'external_url' => $externalAudioUrl,
                 'file_name' => $fileName,
                 'file_size' => $fileSize,
                 'duration_minutes' => $event->lesson->duration_minutes,
