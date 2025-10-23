@@ -140,20 +140,23 @@
                         <div class="mt-4 text-sm text-gray-600">
                             Out of {{ count($questions['questions']) }} questions answered
                         </div>
+                        <div class="mt-4 text-xs sm:text-sm text-purple-600 font-semibold">
+                            <span id="redirectCountdown"></span>
+                        </div>
                     </div>
 
                     <div class="space-y-3">
                         <button
-                            onclick="restartQuiz()"
+                            onclick="viewLeaderboard()"
                             class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full py-4 sm:py-5 font-bold text-lg sm:text-xl active:scale-95 transition-all shadow-lg min-h-14"
                         >
-                            Try Again
+                            View Leaderboard
                         </button>
                         <button
-                            onclick="quitQuiz()"
+                            onclick="restartQuiz()"
                             class="w-full bg-gray-200 text-gray-700 rounded-full py-4 sm:py-5 font-bold text-lg sm:text-xl active:scale-95 transition-all min-h-14"
                         >
-                            Exit
+                            Try Again
                         </button>
                     </div>
                 </div>
@@ -165,7 +168,9 @@
         const quizData = @json($questions['questions'] ?? []);
         const gameSessionId = {{ $game_session->id ?? 'null' }};
         const participantId = {{ $participant->id ?? 'null' }};
+        const encryptedParticipantId = "{{ encrypt($participant->id ?? 0) }}";
         const gameTopic = "{{ $questions['topic'] ?? 'Quiz' }}";
+        const gamePin = "{{ $game_pin ?? '' }}";
         const csrfToken = "{{ csrf_token() }}";
         let currentQuestionIndex = 0;
         let score = 0;
@@ -412,9 +417,39 @@
             if (navigator.vibrate && score >= 500) {
                 navigator.vibrate([100, 50, 100, 50, 100]);
             }
+
+            // Countdown and auto-redirect to leaderboard after 5 seconds
+            let countdown = 5;
+            const countdownElement = document.getElementById('redirectCountdown');
+            countdownElement.textContent = `Redirecting to leaderboard in ${countdown} seconds...`;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownElement.textContent = `Redirecting to leaderboard in ${countdown} seconds...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    viewLeaderboard();
+                }
+            }, 1000);
+
+            // Store interval ID so we can cancel it if user clicks a button
+            window.redirectCountdownInterval = countdownInterval;
+        }
+
+        function viewLeaderboard() {
+            // Clear countdown interval if exists
+            if (window.redirectCountdownInterval) {
+                clearInterval(window.redirectCountdownInterval);
+            }
+            window.location.href = `/quiz/leaderboards/${gamePin}/${encryptedParticipantId}`;
         }
 
         function restartQuiz() {
+            // Clear countdown interval if exists
+            if (window.redirectCountdownInterval) {
+                clearInterval(window.redirectCountdownInterval);
+            }
             currentQuestionIndex = 0;
             score = 0;
             answered = false;
@@ -426,7 +461,7 @@
         function quitQuiz() {
             stopTimer();
             if (confirm('Are you sure you want to quit the quiz?')) {
-                window.location.href = '/dashboard';
+                window.location.href = '/';
             } else {
                 if (!answered && currentQuestionIndex < quizData.length) {
                     startTimer();
