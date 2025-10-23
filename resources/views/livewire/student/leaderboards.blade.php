@@ -139,8 +139,8 @@
             </svg>
             <span>Join Another Quiz</span>
         </a>
-        <a href="{{ route('result', ['game_pin' => $game_pin, 'participant_id' => encrypt($participant_id)]) }}" wire:click="generateResult" class="bg-green-400 hover:cursor px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-100 transition-all shadow-lg active:scale-95 inline-flex items-center gap-2">
-            <span>View Result</span>
+        <a href="{{ route('result', ['game_pin' => $game_pin, 'participant_id' => encrypt($participant_id)]) }}" target="_blank" class="bg-green-400 hover:cursor px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-100 transition-all shadow-lg active:scale-95 inline-flex items-center gap-2">
+            <span>View Flashcards</span>
         </a>
     </div>
     <style>
