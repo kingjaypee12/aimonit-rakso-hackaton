@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Actions\GenerateFileUrl;
 use App\Events\LessonAudioUploaded;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CallN8nWebhook implements ShouldQueue
 {
@@ -40,7 +40,7 @@ class CallN8nWebhook implements ShouldQueue
 
         if ($audioFilePath) {
             try {
-                $externalAudioUrl = GenerateFileUrl::execute($audioFilePath);
+                $externalAudioUrl = Storage::disk('public')->url($audioFilePath);
 
                 if ($externalAudioUrl) {
                     Log::info('External audio URL generated successfully', [

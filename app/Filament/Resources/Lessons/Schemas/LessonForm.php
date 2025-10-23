@@ -74,10 +74,9 @@ class LessonForm
                             ->label('Audio/Video File')
                             ->acceptedFileTypes(['audio/*', 'video/*'])
                             ->maxSize(500 * 1024) // 500MB
-                            //->maxSize(1024)
-                            ->storeFiles(false)
-                            ->previewable(false)
-                            ->helperText('Upload an audio or video file of the lesson (max 500MB). External upload will happen when you save the lesson.')
+                            ->disk('public')
+                            ->directory('lessons/audio')
+                            ->helperText('Upload an audio or video file of the lesson (max 500MB). Files will be stored in the public disk under lessons/audio directory.')
                             ->columnSpanFull(),
 
                         Actions::make([

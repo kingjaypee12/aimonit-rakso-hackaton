@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Lessons\Pages;
 
-use App\Actions\UploadFile;
 use App\Events\LessonAudioUploaded;
 use App\Filament\Resources\Lessons\LessonResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class CreateLesson extends CreateRecord
 {
@@ -14,17 +14,6 @@ class CreateLesson extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-
-        // Separate audio file uploading logic
-        if (isset($data['audio_file_path']) && $data['audio_file_path']) {
-            // Use UploadFile action to upload the audio file and get the generated file path
-            $uploadFile = new UploadFile;
-            $audioPath = $uploadFile->execute($data['audio_file_path']);
-
-            // Save the generated file path as audio_file_path
-            $data['audio_file_path'] = $audioPath;
-        }
-
         // Create the lesson record with the updated data
         return static::getModel()::create($data);
     }
