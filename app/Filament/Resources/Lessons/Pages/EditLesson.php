@@ -5,6 +5,8 @@ namespace App\Filament\Resources\Lessons\Pages;
 use App\Events\LessonAudioUploaded;
 use App\Filament\Resources\Lessons\LessonResource;
 use Filament\Actions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 

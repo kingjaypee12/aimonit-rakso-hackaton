@@ -120,20 +120,20 @@ class LessonInfolist
                     ->visible(fn ($record) => !empty($record->transcription))
                     ->collapsible(),
 
-                Section::make('Quiz Generation')
+                Section::make('Quiz Management')
                     ->schema([
                         Actions::make([
-                            Action::make('create_quiz')
-                                ->label('Create Gamified Quiz')
-                                ->icon('heroicon-o-puzzle-piece')
-                                ->color('success')
-                                ->size('lg')
-                                ->visible(fn ($record) => $record->status === 'ready')
-                                ->action(function ($record) {
-                                    return redirect()->route('filament.admin.resources.game-sessions.create', [
-                                        'lesson_id' => $record->id
-                                    ]);
-                                }),
+                            // Action::make('create_quiz')
+                            //     ->label('Create Gamified Quiz')
+                            //     ->icon('heroicon-o-puzzle-piece')
+                            //     ->color('success')
+                            //     ->size('lg')
+                            //     ->visible(fn ($record) => $record->status === 'ready')
+                            //     ->action(function ($record) {
+                            //         return redirect()->route('filament.admin.resources.game-sessions.create', [
+                            //             'lesson_id' => $record->id
+                            //         ]);
+                            //     }),
                             
                             Action::make('view_quizzes')
                                 ->label('View Existing Quizzes')

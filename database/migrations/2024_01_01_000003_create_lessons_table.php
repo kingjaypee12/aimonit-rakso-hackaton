@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longText('transcription')->nullable();
             $table->string('audio_file_path')->nullable();
             $table->integer('duration_minutes')->nullable();
-            $table->enum('status', ['draft', 'processing', 'completed', 'failed'])->default('draft');
+            $table->enum('status', ['draft', 'processing', 'ready', 'published'])->default('draft');
             $table->timestamps();
         });
     }
