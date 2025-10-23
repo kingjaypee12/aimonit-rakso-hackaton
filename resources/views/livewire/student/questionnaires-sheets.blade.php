@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 p-3 sm:p-4">
+<div class="min-h-screen h-full bg-gradient-to-br from-[#034e96] via-[#0560a8] to-[#f7620c] p-3 sm:p-4">
     @if($error_message)
         <div class="max-w-2xl mx-auto">
             <div class="bg-white rounded-3xl shadow-2xl p-8 text-center">
@@ -23,8 +23,8 @@
         </div>
     @else
         <div class="max-w-2xl mx-auto">
-            <div class="flex justify-center mb-3">
-                <div class="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white text-xs sm:text-sm font-semibold">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white/30 backdrop-blur-md rounded-full px-6 py-3 text-white text-sm sm:text-base font-bold shadow-lg border-2 border-white/40">
                     📌 PIN: {{ $game_pin }} | 🎯 {{ $questions['topic'] ?? 'Quiz' }}
                 </div>
             </div>
@@ -47,14 +47,14 @@
 
         <div class="flex justify-center mb-4">
             <div class="relative">
-                <div class="bg-white rounded-2xl shadow-lg px-6 py-3 sm:px-8 sm:py-4">
-                    <div class="flex items-center gap-3">
-                        <svg id="timerIcon" class="w-6 h-6 sm:w-7 sm:h-7 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                <div class="bg-white rounded-3xl shadow-2xl px-8 py-4 sm:px-10 sm:py-5 border-4 border-[#034e96]/20">
+                    <div class="flex items-center gap-4">
+                        <svg id="timerIcon" class="w-7 h-7 sm:w-8 sm:h-8 text-[#034e96]" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                         </svg>
                         <div class="text-center">
-                            <div id="timerDisplay" class="text-3xl sm:text-4xl font-black text-purple-600 tabular-nums">30</div>
-                            <div class="text-xs text-gray-500 font-semibold">seconds</div>
+                            <div id="timerDisplay" class="text-4xl sm:text-5xl font-black text-[#034e96] tabular-nums">30</div>
+                            <div class="text-xs sm:text-sm text-gray-600 font-bold uppercase tracking-wider">seconds</div>
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,8 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-5 sm:p-8 mb-5 min-h-[160px] sm:min-h-[200px] flex items-center justify-center">
-            <h2 id="questionText" class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 text-center leading-relaxed px-2">
+        <div class="bg-white rounded-3xl sm:rounded-[2rem] shadow-2xl p-6 sm:p-10 mb-6 min-h-[180px] sm:min-h-[220px] flex items-center justify-center border-4 border-[#034e96]/10">
+            <h2 id="questionText" class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 text-center leading-relaxed px-2">
                 {{ $questions['questions'][0]['question'] }}
             </h2>
         </div>
@@ -101,60 +101,60 @@
         </div>
 
         <div class="flex justify-center">
-            <div class="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 text-white">
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
+            <div class="bg-white/30 backdrop-blur-md rounded-full px-8 py-4 text-white shadow-xl border-2 border-white/40">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                     </svg>
-                    <span class="font-bold text-base sm:text-lg">Score: <span id="score">0</span> pts</span>
+                    <span class="font-black text-lg sm:text-xl">Score: <span id="score">0</span> pts</span>
                 </div>
             </div>
         </div>
 
-        <div id="explanationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center p-4 z-50" style="display: none;">
-            <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 transform transition-all max-h-[90vh] overflow-y-auto">
+        <div id="explanationModal" class="fixed inset-0 bg-black/60 backdrop-blur-md items-center justify-center p-4 z-50" style="display: none;">
+            <div class="bg-white rounded-3xl sm:rounded-[2rem] shadow-2xl max-w-lg w-full p-8 sm:p-10 transform transition-all max-h-[90vh] overflow-y-auto border-4 border-[#034e96]/20">
                 <div id="resultIcon" class="text-5xl sm:text-6xl text-center mb-4">✓</div>
                 <h3 id="resultTitle" class="text-xl sm:text-2xl font-bold text-center mb-4">Correct!</h3>
                 <p id="explanationText" class="text-gray-700 text-center mb-6 leading-relaxed text-base"></p>
                 <button
                     onclick="nextQuestion()"
-                    class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full py-4 sm:py-5 font-bold text-lg sm:text-xl active:scale-95 transition-all shadow-lg min-h-[56px]"
+                    class="w-full bg-gradient-to-r from-[#034e96] to-[#0a6bc2] hover:from-[#023a70] hover:to-[#034e96] text-white rounded-full py-5 sm:py-6 font-bold text-xl sm:text-2xl active:scale-95 transition-all shadow-xl min-h-[64px]"
                 >
                     Next Question
                 </button>
             </div>
         </div>
 
-        <div id="resultsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center p-4 z-50" style="display: none;">
-            <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 transform transition-all max-h-[90vh] overflow-y-auto">
+        <div id="resultsModal" class="fixed inset-0 bg-black/60 backdrop-blur-md items-center justify-center p-4 z-50" style="display: none;">
+            <div class="bg-white rounded-3xl sm:rounded-[2rem] shadow-2xl max-w-lg w-full p-8 sm:p-10 transform transition-all max-h-[90vh] overflow-y-auto border-4 border-[#034e96]/20">
                 <div class="text-center">
                     <div class="text-5xl sm:text-6xl mb-4">🎉</div>
                     <h3 class="text-2xl sm:text-3xl font-bold mb-2">Quiz Complete!</h3>
                     <p class="text-gray-600 mb-6 text-sm sm:text-base">{{ $questions['topic'] }}</p>
 
-                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-6 mb-6">
-                        <div class="text-4xl sm:text-5xl font-bold text-purple-600 mb-2">
+                    <div class="bg-gradient-to-br from-[#034e96]/10 to-[#f7620c]/10 rounded-3xl p-8 mb-6 border-2 border-[#034e96]/20">
+                        <div class="text-5xl sm:text-6xl font-black bg-gradient-to-r from-[#034e96] to-[#f7620c] bg-clip-text text-transparent mb-3">
                             <span id="finalScore">0</span> <span id="totalQuestions">points</span>
                         </div>
-                        <p class="text-gray-700 font-semibold text-sm sm:text-base">Your Total Score</p>
+                        <p class="text-gray-800 font-bold text-base sm:text-lg">Your Total Score</p>
                         <div class="mt-4 text-sm text-gray-600">
                             Out of {{ count($questions['questions']) }} questions answered
                         </div>
-                        <div class="mt-4 text-xs sm:text-sm text-purple-600 font-semibold">
+                        <div class="mt-5 text-sm sm:text-base text-[#f7620c] font-bold">
                             <span id="redirectCountdown"></span>
                         </div>
                     </div>
 
-                    <div class="space-y-3">
+                    <div class="space-y-4">
                         <button
                             onclick="viewLeaderboard()"
-                            class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full py-4 sm:py-5 font-bold text-lg sm:text-xl active:scale-95 transition-all shadow-lg min-h-14"
+                            class="w-full bg-gradient-to-r from-[#f7620c] to-[#ff8534] hover:from-[#d65409] hover:to-[#f7620c] text-white rounded-full py-5 sm:py-6 font-bold text-xl sm:text-2xl active:scale-95 transition-all shadow-xl min-h-16"
                         >
                             View Leaderboard
                         </button>
                         <button
                             onclick="restartQuiz()"
-                            class="w-full bg-gray-200 text-gray-700 rounded-full py-4 sm:py-5 font-bold text-lg sm:text-xl active:scale-95 transition-all min-h-14"
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full py-5 sm:py-6 font-bold text-xl sm:text-2xl active:scale-95 transition-all min-h-16 border-2 border-gray-300"
                         >
                             Try Again
                         </button>
@@ -203,11 +203,11 @@
                 const timerIcon = document.getElementById('timerIcon');
 
                 if (timeLeft <= 5) {
-                    timerDisplay.className = 'text-3xl sm:text-4xl font-black text-red-600 tabular-nums animate-pulse';
-                    timerIcon.className = 'w-6 h-6 sm:w-7 sm:h-7 text-red-600';
+                    timerDisplay.className = 'text-4xl sm:text-5xl font-black text-red-600 tabular-nums animate-pulse';
+                    timerIcon.className = 'w-7 h-7 sm:w-8 sm:h-8 text-red-600';
                 } else if (timeLeft <= 10) {
-                    timerDisplay.className = 'text-3xl sm:text-4xl font-black text-orange-600 tabular-nums';
-                    timerIcon.className = 'w-6 h-6 sm:w-7 sm:h-7 text-orange-600';
+                    timerDisplay.className = 'text-4xl sm:text-5xl font-black text-[#f7620c] tabular-nums';
+                    timerIcon.className = 'w-7 h-7 sm:w-8 sm:h-8 text-[#f7620c]';
                 }
 
                 if (timeLeft <= 0) {
@@ -291,8 +291,8 @@
             const timerDisplay = document.getElementById('timerDisplay');
             const timerIcon = document.getElementById('timerIcon');
             const timerRing = document.getElementById('timerRing');
-            timerDisplay.className = 'text-3xl sm:text-4xl font-black text-purple-600 tabular-nums';
-            timerIcon.className = 'w-6 h-6 sm:w-7 sm:h-7 text-purple-600';
+            timerDisplay.className = 'text-4xl sm:text-5xl font-black text-[#034e96] tabular-nums';
+            timerIcon.className = 'w-7 h-7 sm:w-8 sm:h-8 text-[#034e96]';
             timerRing.style.strokeDashoffset = '0';
 
             ['A', 'B', 'C', 'D'].forEach(option => {
