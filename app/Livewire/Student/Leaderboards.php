@@ -33,7 +33,7 @@ class Leaderboards extends Component
     {
         $leaderboards = $this->getLeaderBoards();
 
-        return view('livewire..student.leaderboards', compact('leaderboards'));
+        return view('livewire.student.leaderboards', compact('leaderboards'));
     }
 
     private function getLeaderBoards()

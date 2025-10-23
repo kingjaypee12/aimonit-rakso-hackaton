@@ -79,7 +79,7 @@
                 @foreach($others as $index => $player)
                     <div class="flex justify-between items-center py-3 sm:py-4 px-4 sm:px-5 hover:bg-gray-50 transition {{ $player['is_current_user'] ? 'bg-purple-50 border-l-4 border-purple-600' : '' }}">
                         <div class="flex items-center gap-3 sm:gap-4">
-                            <span class="font-bold text-gray-500 text-base sm:text-lg w-6 sm:w-8">{{ $index + 4 }}</span>
+                            <span class="font-bold text-gray-500 text-base sm:text-lg w-6 sm:w-8">{{ $index + 1 }}</span>
                             <div>
                                 <span class="font-semibold text-gray-800 text-sm sm:text-base {{ $player['is_current_user'] ? 'text-purple-700' : '' }}">
                                     {{ $player['name'] }}
