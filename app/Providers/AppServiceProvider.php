@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Filesystem\CustomApiAdapter;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        
+        Storage::extend('peac_files', function ($app, $config) {
+            $adapter = new CustomApiAdapter($config);
+            $filesystem = new \League\Flysystem\Filesystem($adapter, $config);
+
+            return new \Illuminate\Filesystem\FilesystemAdapter($filesystem, $adapter, $config);
+        });
     }
 }

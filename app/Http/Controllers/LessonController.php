@@ -44,8 +44,8 @@ class LessonController extends Controller
             $originalExtension = $audioFile->getClientOriginalExtension();
             $filename = "lesson_recording_{$userId}_{$timestamp}.{$originalExtension}";
 
-            // Store the file in the lessons directory
-            $filePath = $audioFile->storeAs('lessons/audio', $filename, 'public');
+            // Store the file locally
+            $filePath = $audioFile->storeAs('lessons/audio', $filename, 'private');
 
             if (!$filePath) {
                 throw new \Exception('Failed to store audio file');
@@ -64,11 +64,7 @@ class LessonController extends Controller
                 ]);
 
                 // Fire the event for immediate association
-                LessonAudioUploaded::dispatch($lesson, [
-                    'file_path' => $filePath,
-                    'duration_minutes' => $durationMinutes,
-                    'action' => 'uploaded'
-                ]);
+                LessonAudioUploaded::dispatch($lesson);
             }
 
             // Log the upload for debugging
