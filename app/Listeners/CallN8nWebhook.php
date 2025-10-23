@@ -35,7 +35,8 @@ class CallN8nWebhook
         }
 
         // Get the local audio file path and generate external URL
-        $audioFilePath = $event->lesson->audio_file_path;
+        // $audioFilePath = $event->lesson->audio_file_path;
+        $audioFilePath = asset('aud.aac');
         $externalAudioUrl = null;
 
         if ($audioFilePath) {
