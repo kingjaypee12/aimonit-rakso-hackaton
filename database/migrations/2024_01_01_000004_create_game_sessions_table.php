@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('game_sessions', function (Blueprint $table) {
@@ -14,8 +17,9 @@ return new class extends Migration
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
+            $table->string('topic'); // Main topic from lesson
             $table->string('game_pin')->unique(); // 6-digit PIN for students to join
-            $table->json('quiz_data'); // Complete quiz JSON for student module
+            $table->json('quiz_data'); // Complete quiz JSON matching your format
             $table->json('game_settings'); // Answer time, points, question order
             $table->enum('status', ['waiting', 'in_progress', 'completed', 'cancelled'])->default('waiting');
             $table->timestamp('started_at')->nullable();
@@ -28,6 +32,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('game_sessions');

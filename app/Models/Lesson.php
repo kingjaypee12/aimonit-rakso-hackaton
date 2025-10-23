@@ -25,6 +25,11 @@ class Lesson extends Model
 
     protected $casts = [
         'duration_minutes' => 'integer',
+        'transcription' => 'string',
+    ];
+
+    protected $attributes = [
+        'transcription' => null,
     ];
 
     /**
