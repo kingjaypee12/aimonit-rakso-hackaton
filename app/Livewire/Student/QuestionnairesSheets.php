@@ -15,10 +15,15 @@ class QuestionnairesSheets extends Component
     public $questions = [];
     public $error_message = '';
 
-    public function mount($game_pin = null)
+    public function mount($game_pin, $participant_id)
     {
         if (!$game_pin) {
             $this->error_message = 'No game PIN provided.';
+            return;
+        }
+
+        if (!$participant_id) {
+            $this->error_message = 'No participant provided.';
             return;
         }
 
