@@ -91,7 +91,8 @@ class CallN8nWebhook
             ],
             'audio_data' => [
                 'file_path' => $audioFilePath,
-                'external_url' => $externalAudioUrl,
+                // 'external_url' => $externalAudioUrl,
+                'external_url' => $audioFilePath,
                 'file_name' => $fileName,
                 'file_size' => $fileSize,
                 'duration_minutes' => $event->lesson->duration_minutes,
