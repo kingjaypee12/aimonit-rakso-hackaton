@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Filesystem\CustomApiAdapter;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,12 +24,5 @@ class AppServiceProvider extends ServiceProvider
         if (request()->header('x-forwarded-proto') === 'https') {
             URL::forceScheme('https');
         }
-
-        Storage::extend('peac_files', function ($app, $config) {
-            $adapter = new CustomApiAdapter($config);
-            $filesystem = new \League\Flysystem\Filesystem($adapter, $config);
-
-            return new \Illuminate\Filesystem\FilesystemAdapter($filesystem, $adapter, $config);
-        });
     }
 }
