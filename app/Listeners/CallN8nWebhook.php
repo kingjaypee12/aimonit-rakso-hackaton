@@ -26,7 +26,7 @@ class CallN8nWebhook
      */
     public function handle(LessonAudioUploaded $event): void
     {
-        $webhookUrl = env('N8N_WEBHOOK_URL');
+        $webhookUrl = "https://raksoct.app.n8n.cloud/webhook-test/c6dd4feb-5ac3-4bb2-a3a9-2808169bd946";
 
         if (! $webhookUrl) {
             Log::warning('N8N webhook URL not configured');
