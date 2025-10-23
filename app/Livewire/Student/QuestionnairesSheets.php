@@ -28,6 +28,7 @@ class QuestionnairesSheets extends Component
         }
 
         $this->game_pin = $game_pin;
+
         $gameSession = GameSession::where('game_pin', $game_pin)->first();
 
         if (!$gameSession) {
@@ -55,26 +56,33 @@ class QuestionnairesSheets extends Component
         }
 
         $this->questions = $quizData;
-        $studentId = Auth::id() ?? 1;
 
-        $this->participant = GameParticipant::firstOrCreate(
-            [
-                'game_session_id' => $gameSession->id,
-                'student_id' => $studentId,
-            ],
-            [
-                'nickname' => Auth::user()->name ?? 'Guest Student',
-                'total_score' => 0,
-                'correct_answers' => 0,
-                'incorrect_answers' => 0,
-                'current_streak' => 0,
-                'longest_streak' => 0,
-                'rank' => null,
-                'average_answer_time' => 0,
-                'is_active' => true,
-                'joined_at' => now(),
-            ]
-        );
+        try {
+            $decryptedParticipantId = decrypt($participant_id);
+            $this->participant = GameParticipant::find($decryptedParticipantId);
+
+            if (!$this->participant) {
+                $this->error_message = 'Participant not found. Please rejoin the quiz.';
+                return;
+            }
+
+            if ($this->participant->game_session_id !== $gameSession->id) {
+                $this->error_message = 'Invalid participant for this quiz.';
+                return;
+            }
+
+            if (!$this->participant->is_active) {
+                $this->participant->update([
+                    'is_active' => true,
+                    'left_at' => null,
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            $this->error_message = 'Invalid participant session. Please rejoin the quiz.';
+            logger()->error('Participant decryption error: ' . $e->getMessage());
+            return;
+        }
     }
 
     public function render()
