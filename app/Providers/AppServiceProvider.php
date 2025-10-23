@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
         Storage::extend('peac_files', function ($app, $config) {
             $adapter = new CustomApiAdapter($config);
             $filesystem = new \League\Flysystem\Filesystem($adapter, $config);

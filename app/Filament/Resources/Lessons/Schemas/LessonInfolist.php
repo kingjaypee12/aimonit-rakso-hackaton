@@ -99,10 +99,12 @@ class LessonInfolist
                                     // This will be handled by JavaScript
                                     return null;
                                 })
-                                ->extraAttributes([
-                                    'onclick' => 'playAudio(this)',
-                                    'data-audio-url' => fn ($record) => Storage::url($record->audio_file_path ?? ''),
-                                ]),
+                                ->extraAttributes(function ($record) {
+                                    return [
+                                        'onclick' => 'playAudio(this)',
+                                        'data-audio-url' => Storage::url($record->audio_file_path ?? '')
+                                    ];
+                                }),
                         ]),
                     ])
                     ->visible(fn ($record) => !empty($record->audio_file_path)),

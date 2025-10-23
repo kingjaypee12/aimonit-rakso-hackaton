@@ -3,11 +3,10 @@
 namespace App\Filament\Resources\Lessons\Schemas;
 
 use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Grid;
@@ -33,7 +32,7 @@ class LessonForm
                                     ->searchable()
                                     ->preload()
                                     ->default(auth()->id()),
-                                
+
                                 Select::make('status')
                                     ->options([
                                         'draft' => 'Draft',
@@ -45,23 +44,23 @@ class LessonForm
                                     ->default('draft')
                                     ->native(false),
                             ]),
-                        
+
                         TextInput::make('title')
                             ->required()
                             ->maxLength(255)
                             ->placeholder('Enter lesson title'),
-                        
+
                         Textarea::make('description')
                             ->placeholder('Describe what this lesson covers...')
                             ->rows(3)
                             ->columnSpanFull(),
-                        
+
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('subject')
                                     ->placeholder('e.g., Mathematics, Science')
                                     ->maxLength(100),
-                                
+
                                 TextInput::make('grade_level')
                                     ->placeholder('e.g., Grade 5, High School')
                                     ->maxLength(50),
@@ -75,12 +74,12 @@ class LessonForm
                             ->label('Audio/Video File')
                             ->acceptedFileTypes(['audio/*', 'video/*'])
                             ->maxSize(500 * 1024) // 500MB
-                            ->maxSize(1024)
+                            //->maxSize(1024)
                             ->storeFiles(false)
                             ->previewable(false)
                             ->helperText('Upload an audio or video file of the lesson (max 500MB). External upload will happen when you save the lesson.')
                             ->columnSpanFull(),
-                        
+
                         Actions::make([
                             Action::make('record_audio')
                                 ->label('Record Live Class')
@@ -94,12 +93,12 @@ class LessonForm
                                 })
                                 ->extraAttributes([
                                     'onclick' => 'openRecordingModal()',
-                                    'id' => 'record-button'
+                                    'id' => 'record-button',
                                 ]),
                         ])
-                        ->columnSpanFull()
-                        ->alignment('center'),
-                        
+                            ->columnSpanFull()
+                            ->alignment('center'),
+
                         TextEntry::make('recording_info')
                             ->label('')
                             ->state('Click "Record Live Class" to start recording audio directly from your microphone. The recording will be automatically saved and processed.')
@@ -116,11 +115,11 @@ class LessonForm
                                     ->numeric()
                                     ->disabled()
                                     ->placeholder('Auto-calculated'),
-                                
+
                                 TextEntry::make('processing_status')
                                     ->label('Status')
-                                    ->state(fn ($record) => $record ? 
-                                        match($record->status) {
+                                    ->state(fn ($record) => $record ?
+                                        match ($record->status) {
                                             'draft' => '⏳ Ready for upload',
                                             'processing' => '🔄 Processing audio...',
                                             'completed' => '✅ Audio saved',
@@ -131,14 +130,14 @@ class LessonForm
                             ]),
                     ])
                     ->collapsible()
-                    ->collapsed(fn ($record) => !$record || $record->status === 'draft'),
-                
+                    ->collapsed(fn ($record) => ! $record || $record->status === 'draft'),
+
                 // Recording Modal
                 View::make('components.recording-modal')
                     ->columnSpanFull(),
             ])
             ->extraAttributes([
-                'x-data' => '{ recordingModal: false }'
+                'x-data' => '{ recordingModal: false }',
             ]);
     }
 }

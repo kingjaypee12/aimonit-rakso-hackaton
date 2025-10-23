@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\Lessons\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Actions\Action;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,35 +24,35 @@ class LessonsTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn ($record) => $record->description ? 
+                    ->description(fn ($record) => $record->description ?
                         \Illuminate\Support\Str::limit($record->description, 50) : null),
-                
+
                 TextColumn::make('teacher.name')
                     ->label('Teacher')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                
+
                 TextColumn::make('subject')
                     ->searchable()
                     ->badge()
                     ->color('info'),
-                
+
                 TextColumn::make('grade_level')
                     ->label('Grade')
                     ->searchable()
                     ->badge()
                     ->color('gray'),
-                
+
                 IconColumn::make('has_audio')
                     ->label('Audio')
                     ->boolean()
-                    ->getStateUsing(fn ($record) => !empty($record->audio_file_path))
+                    ->getStateUsing(fn ($record) => ! empty($record->audio_file_path))
                     ->trueIcon('heroicon-o-musical-note')
                     ->falseIcon('heroicon-o-x-mark')
                     ->trueColor('success')
                     ->falseColor('gray'),
-                
+
                 TextColumn::make('duration_minutes')
                     ->label('Duration')
                     ->numeric()
@@ -60,7 +60,7 @@ class LessonsTable
                     ->suffix(' min')
                     ->placeholder('—')
                     ->toggleable(),
-                
+
                 BadgeColumn::make('status')
                     ->colors([
                         'gray' => 'draft',
@@ -74,13 +74,13 @@ class LessonsTable
                         'heroicon-o-check-circle' => 'ready',
                         'heroicon-o-eye' => 'published',
                     ]),
-                
+
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime('M j, Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 TextColumn::make('updated_at')
                     ->label('Updated')
                     ->dateTime('M j, Y')
@@ -96,12 +96,12 @@ class LessonsTable
                         'published' => 'Published',
                     ])
                     ->multiple(),
-                
+
                 SelectFilter::make('subject')
                     ->relationship('teacher', 'name')
                     ->searchable()
                     ->preload(),
-                
+
                 SelectFilter::make('has_audio')
                     ->label('Has Audio File')
                     ->options([
@@ -129,7 +129,7 @@ class LessonsTable
                     ->action(function ($record) {
                         // This will redirect to quiz creation
                         return redirect()->route('filament.admin.resources.game-sessions.create', [
-                            'lesson_id' => $record->id
+                            'lesson_id' => $record->id,
                         ]);
                     }),
             ])

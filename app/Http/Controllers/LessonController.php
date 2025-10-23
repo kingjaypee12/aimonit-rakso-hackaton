@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\LessonAudioUploaded;
 use App\Models\Lesson;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class LessonController extends Controller
 {
@@ -30,7 +29,7 @@ class LessonController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation failed',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -47,7 +46,7 @@ class LessonController extends Controller
             // Store the file locally
             $filePath = $audioFile->storeAs('lessons/audio', $filename, 'private');
 
-            if (!$filePath) {
+            if (! $filePath) {
                 throw new \Exception('Failed to store audio file');
             }
 
@@ -60,7 +59,7 @@ class LessonController extends Controller
                 $lesson = Lesson::findOrFail($lessonId);
                 $lesson->update([
                     'audio_file_path' => $filePath,
-                    'duration_minutes' => $durationMinutes
+                    'duration_minutes' => $durationMinutes,
                 ]);
 
                 // Fire the event for immediate association
@@ -73,7 +72,7 @@ class LessonController extends Controller
                 'file_path' => $filePath,
                 'file_size' => $fileSize,
                 'duration_minutes' => $durationMinutes,
-                'mime_type' => $mimeType
+                'mime_type' => $mimeType,
             ]);
 
             return response()->json([
@@ -84,20 +83,20 @@ class LessonController extends Controller
                     'duration' => $durationMinutes,
                     'file_size' => $fileSize,
                     'mime_type' => $mimeType,
-                    'filename' => $filename
-                ]
+                    'filename' => $filename,
+                ],
             ]);
 
         } catch (\Exception $e) {
             Log::error('Audio upload failed', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
-                'request_data' => $request->except(['audio_file'])
+                'request_data' => $request->except(['audio_file']),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to upload audio file: ' . $e->getMessage()
+                'message' => 'Failed to upload audio file: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -116,7 +115,7 @@ class LessonController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation failed',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -126,7 +125,7 @@ class LessonController extends Controller
             if ($lesson->teacher_id !== Auth::id()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Unauthorized to process this lesson'
+                    'message' => 'Unauthorized to process this lesson',
                 ], 403);
             }
 
@@ -135,7 +134,7 @@ class LessonController extends Controller
 
             // TODO: Implement actual transcription and quiz generation logic
             // For now, we'll simulate the process
-            
+
             // In a real implementation, you would:
             // 1. Send audio file to transcription service (e.g., OpenAI Whisper, Google Speech-to-Text)
             // 2. Process transcription to extract key concepts
@@ -144,7 +143,7 @@ class LessonController extends Controller
 
             Log::info('Lesson processing started', [
                 'lesson_id' => $lesson->id,
-                'user_id' => Auth::id()
+                'user_id' => Auth::id(),
             ]);
 
             return response()->json([
@@ -152,20 +151,20 @@ class LessonController extends Controller
                 'message' => 'Lesson processing started successfully',
                 'data' => [
                     'lesson_id' => $lesson->id,
-                    'status' => 'processing'
-                ]
+                    'status' => 'processing',
+                ],
             ]);
 
         } catch (\Exception $e) {
             Log::error('Lesson processing failed', [
                 'error' => $e->getMessage(),
                 'lesson_id' => $request->input('lesson_id'),
-                'user_id' => Auth::id()
+                'user_id' => Auth::id(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to process lesson: ' . $e->getMessage()
+                'message' => 'Failed to process lesson: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -180,13 +179,13 @@ class LessonController extends Controller
             abort(403, 'Unauthorized to download this audio file');
         }
 
-        if (!$lesson->audio_file_path) {
+        if (! $lesson->audio_file_path) {
             abort(404, 'Audio file not found');
         }
 
-        $filePath = storage_path('app/public/' . $lesson->audio_file_path);
+        $filePath = storage_path('app/public/'.$lesson->audio_file_path);
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             abort(404, 'Audio file not found on disk');
         }
 
@@ -203,18 +202,18 @@ class LessonController extends Controller
             abort(403, 'Unauthorized to access this audio file');
         }
 
-        if (!$lesson->audio_file_path) {
+        if (! $lesson->audio_file_path) {
             abort(404, 'Audio file not found');
         }
 
-        $filePath = storage_path('app/public/' . $lesson->audio_file_path);
+        $filePath = storage_path('app/public/'.$lesson->audio_file_path);
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             abort(404, 'Audio file not found on disk');
         }
 
         $mimeType = mime_content_type($filePath);
-        
+
         return response()->file($filePath, [
             'Content-Type' => $mimeType,
             'Accept-Ranges' => 'bytes',

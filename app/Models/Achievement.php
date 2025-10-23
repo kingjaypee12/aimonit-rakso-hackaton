@@ -30,11 +30,17 @@ class Achievement extends Model
 
     // Achievement types constants
     public const TYPE_FASTEST_ANSWER = 'fastest_answer';
+
     public const TYPE_PERFECT_SCORE = 'perfect_score';
+
     public const TYPE_COMEBACK_KING = 'comeback_king';
+
     public const TYPE_STREAK_MASTER = 'streak_master';
+
     public const TYPE_FIRST_PLACE = 'first_place';
+
     public const TYPE_PARTICIPATION = 'participation';
+
     public const TYPE_IMPROVEMENT = 'improvement';
 
     /**

@@ -18,12 +18,11 @@ class CreateLesson extends CreateRecord
         // Separate audio file uploading logic
         if (isset($data['audio_file_path']) && $data['audio_file_path']) {
             // Use UploadFile action to upload the audio file and get the generated file path
-                $uploadFile = new UploadFile();
-                $audioPath = $uploadFile->execute($data['audio_file_path']);
+            $uploadFile = new UploadFile;
+            $audioPath = $uploadFile->execute($data['audio_file_path']);
 
-
-                // Save the generated file path as audio_file_path
-                $data['audio_file_path'] = $audioPath;
+            // Save the generated file path as audio_file_path
+            $data['audio_file_path'] = $audioPath;
         }
 
         // Create the lesson record with the updated data

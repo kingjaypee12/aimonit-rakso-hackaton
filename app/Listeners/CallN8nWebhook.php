@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class CallN8nWebhook implements ShouldQueue
 {
@@ -28,49 +27,51 @@ class CallN8nWebhook implements ShouldQueue
     public function handle(LessonAudioUploaded $event): void
     {
         $webhookUrl = env('N8N_WEBHOOK_URL');
-        
-        if (!$webhookUrl) {
+
+        if (! $webhookUrl) {
             Log::warning('N8N webhook URL not configured');
+
             return;
         }
 
         // Get the local audio file path and generate external URL
         $audioFilePath = $event->lesson->audio_file_path;
         $externalAudioUrl = null;
-        
+
         if ($audioFilePath) {
             try {
                 $externalAudioUrl = GenerateFileUrl::execute($audioFilePath);
-                
+
                 if ($externalAudioUrl) {
                     Log::info('External audio URL generated successfully', [
                         'lesson_id' => $event->lesson->id,
                         'file_path' => $audioFilePath,
-                        'external_url' => $externalAudioUrl
+                        'external_url' => $externalAudioUrl,
                     ]);
                 } else {
                     Log::warning('Failed to generate external URL for audio file', [
                         'lesson_id' => $event->lesson->id,
-                        'file_path' => $audioFilePath
+                        'file_path' => $audioFilePath,
                     ]);
                 }
             } catch (\Exception $e) {
                 Log::error('Exception while generating external URL', [
                     'lesson_id' => $event->lesson->id,
                     'file_path' => $audioFilePath,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
-        
-        if (!$externalAudioUrl) {
-            Log::warning('No accessible audio URL found for lesson: ' . $event->lesson->id);
+
+        if (! $externalAudioUrl) {
+            Log::warning('No accessible audio URL found for lesson: '.$event->lesson->id);
+
             return;
         }
 
         // Get file information
         $fileName = $audioFilePath ? basename($audioFilePath) : 'unknown';
-        
+
         // File size will be handled by the external service
         // We could potentially get it from the external URL response headers if needed
         $fileSize = null;
@@ -95,30 +96,28 @@ class CallN8nWebhook implements ShouldQueue
                 'duration_minutes' => $event->lesson->duration_minutes,
             ],
             'event_type' => 'lesson_audio_uploaded',
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ];
 
         try {
             $response = Http::timeout(30)->get($webhookUrl, $payload);
-            
+
             if ($response->successful()) {
-                Log::info('N8N webhook called successfully for lesson: ' . $event->lesson->id, [
-                    'external_url' => $externalAudioUrl
+                Log::info('N8N webhook called successfully for lesson: '.$event->lesson->id, [
+                    'external_url' => $externalAudioUrl,
                 ]);
             } else {
                 Log::error('N8N webhook failed', [
                     'lesson_id' => $event->lesson->id,
                     'status' => $response->status(),
-                    'response' => $response->body()
+                    'response' => $response->body(),
                 ]);
             }
         } catch (\Exception $e) {
             Log::error('N8N webhook exception', [
                 'lesson_id' => $event->lesson->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
-
-
 }

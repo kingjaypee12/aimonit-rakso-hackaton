@@ -62,8 +62,8 @@ class GameAnswer extends Model
     public function isWithinTimeLimit(): bool
     {
         $timeLimit = $this->question->time_limit_seconds;
-        
-        if (!$timeLimit) {
+
+        if (! $timeLimit) {
             return true;
         }
 
@@ -76,14 +76,14 @@ class GameAnswer extends Model
     public function getSpeedBonusMultiplier(): float
     {
         $timeLimit = $this->question->time_limit_seconds;
-        
-        if (!$timeLimit || !$this->is_correct) {
+
+        if (! $timeLimit || ! $this->is_correct) {
             return 1.0;
         }
 
         // Faster answers get higher multipliers (up to 2x for very fast answers)
         $timeRatio = $this->answer_time_seconds / $timeLimit;
-        
+
         if ($timeRatio <= 0.25) {
             return 2.0; // Very fast (within 25% of time limit)
         } elseif ($timeRatio <= 0.5) {
@@ -91,7 +91,7 @@ class GameAnswer extends Model
         } elseif ($timeRatio <= 0.75) {
             return 1.25; // Moderate (within 75% of time limit)
         }
-        
+
         return 1.0; // Normal speed
     }
 
@@ -100,7 +100,7 @@ class GameAnswer extends Model
      */
     public function calculateFinalPoints(): int
     {
-        if (!$this->is_correct) {
+        if (! $this->is_correct) {
             return 0;
         }
 

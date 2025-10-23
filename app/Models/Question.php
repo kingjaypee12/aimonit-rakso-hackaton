@@ -110,10 +110,10 @@ class Question extends Model
     {
         $basePoints = $this->points;
         $timeLimit = $this->time_limit_seconds;
-        
+
         // Award full points if answered quickly, reduce points as time increases
         $speedMultiplier = max(0.1, ($timeLimit - $timeToAnswer) / $timeLimit);
-        
+
         return (int) round($basePoints * $speedMultiplier);
     }
 }

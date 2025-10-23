@@ -172,7 +172,7 @@ class GameLeaderboard extends Model
     public function getPodiumWinners(): array
     {
         $top3 = $this->getTopParticipants(3);
-        
+
         return [
             'first' => $top3[0] ?? null,
             'second' => $top3[1] ?? null,

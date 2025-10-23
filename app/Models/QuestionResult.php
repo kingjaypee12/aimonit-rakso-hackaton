@@ -100,8 +100,8 @@ class QuestionResult extends Model
             return null;
         }
 
-        $nonZeroAnswers = array_filter($this->answer_distribution, fn($count) => $count > 0);
-        
+        $nonZeroAnswers = array_filter($this->answer_distribution, fn ($count) => $count > 0);
+
         if (empty($nonZeroAnswers)) {
             return null;
         }
@@ -115,7 +115,7 @@ class QuestionResult extends Model
     public function updateWithAnswer(string $answer, bool $isCorrect, float $answerTime, string $studentName): void
     {
         $this->total_answers++;
-        
+
         if ($isCorrect) {
             $this->correct_answers++;
         } else {

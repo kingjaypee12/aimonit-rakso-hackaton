@@ -269,8 +269,8 @@ class GameReport extends Model
         }
 
         // Question-specific recommendations
-        $difficultQuestions = array_filter($questionAnalysis, fn($q) => $q['accuracy_percentage'] < 50);
-        if (!empty($difficultQuestions)) {
+        $difficultQuestions = array_filter($questionAnalysis, fn ($q) => $q['accuracy_percentage'] < 50);
+        if (! empty($difficultQuestions)) {
             $recommendations[] = [
                 'type' => 'content',
                 'priority' => 'medium',
@@ -281,8 +281,8 @@ class GameReport extends Model
         }
 
         // Individual student recommendations
-        $strugglingStudents = array_filter($studentPerformance, fn($s) => $s['accuracy'] < 60);
-        if (!empty($strugglingStudents)) {
+        $strugglingStudents = array_filter($studentPerformance, fn ($s) => $s['accuracy'] < 60);
+        if (! empty($strugglingStudents)) {
             $recommendations[] = [
                 'type' => 'individual',
                 'priority' => 'high',
@@ -315,7 +315,7 @@ class GameReport extends Model
     {
         $participationRate = ($this->total_participants / max($this->gameSession->participants()->count(), 1)) * 100;
         $completionRate = ($this->questions_completed / max($this->gameSession->questions()->count(), 1)) * 100;
-        
+
         $engagementScore = ($participationRate + $completionRate) / 2;
 
         if ($engagementScore >= 90) {
