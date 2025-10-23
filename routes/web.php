@@ -9,6 +9,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Debug route to test proxy headers and CSRF
+Route::any('/debug-proxy', function (Illuminate\Http\Request $request) {
+    return response()->json([
+        'ip' => $request->ip(),
+        'ips' => $request->ips(),
+        'scheme' => $request->getScheme(),
+        'host' => $request->getHost(),
+        'url' => $request->url(),
+        'headers' => [
+            'x-forwarded-for' => $request->header('x-forwarded-for'),
+            'x-forwarded-proto' => $request->header('x-forwarded-proto'),
+            'x-forwarded-host' => $request->header('x-forwarded-host'),
+            'x-original-host' => $request->header('x-original-host'),
+            'cf-connecting-ip' => $request->header('cf-connecting-ip'),
+            'cf-ray' => $request->header('cf-ray'),
+            'user-agent' => $request->header('user-agent'),
+        ],
+        'csrf_token' => csrf_token(),
+        'session_token' => $request->session()->token(),
+    ]);
+})->name('debug.proxy');
+
 // Lesson management routes
 Route::middleware(['auth', 'web'])->group(function () {
     // Audio upload route for lesson recording

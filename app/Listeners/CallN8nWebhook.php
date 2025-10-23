@@ -95,6 +95,10 @@ class CallN8nWebhook implements ShouldQueue
                 'file_size' => $fileSize,
                 'duration_minutes' => $event->lesson->duration_minutes,
             ],
+            'auth' => [
+                'csrf_token' => csrf_token(),
+                'app_url' => config('app.url'),
+            ],
             'event_type' => 'lesson_audio_uploaded',
             'timestamp' => now()->toISOString(),
         ];
