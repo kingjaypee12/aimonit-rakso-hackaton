@@ -4,7 +4,7 @@
         <!-- ... other head elements ... -->
         <title>{{ env('APP_URL') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="https://cdn.tailwindcss.com"></script>
+        {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
         @livewireStyles
     </head>
     <body class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">

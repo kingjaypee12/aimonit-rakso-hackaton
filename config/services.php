@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'ai' => [
+        'url' => env('API_URL_AI', 'https://default-url.com'),
+        'key' => env('API_KEY_AI')
+    ],
 ];

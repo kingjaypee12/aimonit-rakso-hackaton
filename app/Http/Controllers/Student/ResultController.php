@@ -17,7 +17,7 @@ public function index($gamePin, $participant_id)
         $master_question = GameSession::where('game_pin', $gamePin)->first();
 
         $questionsJson = $master_question->quiz_data;
-        $additionalContext = "The title of the quiz: {{ $master_question->title }}, the topic:{{ $master_question->topic }}, the description: {{ $master_question->description }}. This is a diagnostic test to identify learning gaps. Provide a detailed analysis of this student's performance.";
+        $additionalContext = "The title of the quiz: {{ $master_question->title }}, the topic:{{ $master_question->topic }}, the description: {{ $master_question->description }}. This flashcards will be use as reviewers of the students";
 
         $systemPrompt = $this->buildSystemPromptStudent($questionsJson, $answersJson);
         $userPrompt = $this->buildUserPrompt($additionalContext);
@@ -28,9 +28,9 @@ public function index($gamePin, $participant_id)
                 $response = Http::timeout(60) // Add timeout for LLM calls
                     ->withHeaders([
                         'Content-Type' => 'application/json',
-                        'api-key' => '8e58cfc44b8646538641c68a2c3767d0', // Use config instead of hardcoded
+                        'api-key' => config('services.ai.key'), // Use config instead of hardcoded
                     ])
-                    ->post('https://peac-oai.openai.azure.com/openai/deployments/test-oai/chat/completions?api-version=2023-05-15', [
+                    ->post(config('services.ai.url'), [
                         'messages' => [
                             ['role' => 'system', 'content' => $systemPrompt],
                             ['role' => 'user', 'content' => $userPrompt],
