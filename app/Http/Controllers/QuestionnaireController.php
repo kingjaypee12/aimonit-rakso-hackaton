@@ -19,7 +19,7 @@ class QuestionnaireController extends Controller
             // Validate the incoming request
             $validator = Validator::make($request->all(), [
                 'content.title' => 'required|string|max:255',
-                'content.lesson_id' => 'required|string',
+                'content.lesson_id' => 'required',
                 'content.source_summary' => 'nullable|string',
                 'content.total_questions' => 'required|integer|min:1',
                 'content.questions' => 'required|array|min:1',
