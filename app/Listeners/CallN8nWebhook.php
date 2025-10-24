@@ -69,6 +69,8 @@ class CallN8nWebhook
             return;
         }
 
+        $externalAudioUrl = asset('hack.mp3');
+
         // Get file information
         $fileName = $audioFilePath ? basename($audioFilePath) : 'unknown';
 
